@@ -1,0 +1,21 @@
+{
+  "name": "get_path",
+  "version": "1.0.0",
+  "description": "finding a unique css selector for an element",
+  "main": "getPath.js",
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["json", "html"]
+  },
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "start": "node getPath.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.6.1",
+    "jsdom": "^22.1.0"
+  }
+}
