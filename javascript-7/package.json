@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "tree.js",
-  "scripts": {    
+  "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage" 
+    "coverage": "jest --coverage"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "commander": "^11.0.0",
-    "jest": "^29.6.1"
+    "jest": "^29.6.1",
+    "mock-fs": "^5.2.0"
   }
 }
