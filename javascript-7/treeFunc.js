@@ -1,8 +1,9 @@
-const { dir } = require('console');
 const fs = require('fs/promises');
 const path = require('path');
 
-async function tree(fsPath) {
+async function tree(fsPath) {    
+    console.log(fsPath);
+
     let result = {
         dirs: [],
         files: []
@@ -11,12 +12,9 @@ async function tree(fsPath) {
     const content = await fs.readdir(fsPath, { withFileTypes: true });
 
     for (const obj of content) {
-        const objName = path.join(fsPath, obj.name);
+        const objName = path.join(fsPath, obj.name);        
 
-        if (obj.isFile()) {
-            result.files.push(objName);
-        }
-        else {
+        if (obj.isDirectory()) {
             result.dirs.push(objName);
 
             const subContent = await tree(objName);
@@ -27,7 +25,10 @@ async function tree(fsPath) {
 
             for (const fileObj of subContent.files) {
                 result.files.push(fileObj);
-            }
+            }            
+        }
+        else {
+            result.files.push(objName);
         }
     }
 
