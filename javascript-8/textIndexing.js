@@ -43,6 +43,11 @@ function textIndexing(inPath, outPath) {
 
             resolve();
         });
+
+        wStream.on('error', (error) => {
+            console.log(`Write error: ${error}`);
+            reject();
+        });
     });
 }
 
