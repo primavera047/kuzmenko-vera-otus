@@ -28,19 +28,19 @@ class TreeNode implements ITreeNode {
     public parrent: TreeNode;
     public childs: TreeNode[];
 
-    constructor(value, parrent) {
+    constructor(value: string, parrent: TreeNode) {
         this.value = value;        
         this.parrent = parrent;        
         this.childs = [];              
     }
 
-    findChild(value: string) {
+    findChild(value: string): TreeNode | undefined {
         let child: TreeNode | undefined = this.childs.find((child) => child.value === value);
 
         return child;
     }
 
-    addChild(value: string) {
+    addChild(value: string): TreeNode {
         let child: TreeNode = this.findChild(value);
 
         if (child === undefined) {
@@ -51,7 +51,7 @@ class TreeNode implements ITreeNode {
         return child;
     }
 
-    getFirstParrent() {
+    getFirstParrent(): TreeNode {
         let currentNode: TreeNode = this;
         
         while (currentNode.parrent.value !== null) {
