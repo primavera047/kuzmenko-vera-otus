@@ -1,0 +1,12 @@
+#city #action-box {
+    margin-bottom: 40px;
+}
+
+#city #action-form {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#city #action-form #delete-button {
+    color: red;
+}

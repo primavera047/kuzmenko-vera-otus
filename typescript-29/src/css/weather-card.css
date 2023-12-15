@@ -1,0 +1,35 @@
+#big-card p:first-child {
+  font-size: 50px;
+  margin-left: 20px;
+}
+
+#big-card p {
+  font-size: 25px;
+  margin-left: 20px;
+}
+
+#big-card p:last-child {
+  display: inline-block;
+  font-size: 50px;
+  margin-left: 20px;
+}
+
+#big-card img {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  background: white;
+}
+
+#small-card img {
+  width: 40px;
+  height: 40px;
+  background: white;
+  display: inline-block;
+}
+
+#small-card p {
+  display: inline-block;
+  font-size: 25px;
+  margin-left: 20px;
+}

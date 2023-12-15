@@ -1,0 +1,18 @@
+#zero-state {
+  margin: 2rem auto;
+  text-align: center;
+  color: #818181;
+}
+
+#zero-state a {
+  color: inherit;
+}
+
+#zero-state a:hover {
+  color: #121212;
+}
+
+#zero-state:before {
+  display: block;
+  margin-bottom: 0.5rem;
+}
