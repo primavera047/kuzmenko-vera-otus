@@ -5,7 +5,7 @@ export type Weather = {
 }
 
 export type CityItem = {
-    id: number
+    id: string
     name?: string,
     lat?: number,
     lon?: number,

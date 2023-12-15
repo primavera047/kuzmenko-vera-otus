@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
-import { CityParams } from "../custom-types";
-import { deleteCity } from "../cities";
+import { CityParams } from "../ts/custom-types";
+import { deleteCity } from "../ts/cities";
 
 export async function action({ params }: { params: CityParams }) {
     await deleteCity(params.cityId);

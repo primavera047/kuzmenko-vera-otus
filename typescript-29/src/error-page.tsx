@@ -1,4 +1,5 @@
 import { useRouteError } from "react-router-dom";
+import "./css/error-page.css"
 
 type RouteError = {
     statusText?: string,

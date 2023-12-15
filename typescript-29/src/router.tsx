@@ -1,12 +1,9 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
+import { createBrowserRouter } from "react-router-dom";
 import Root, { loader as rootLoader, action as rootAction, } from "./routes/root";
 import ErrorPage from "./error-page";
-import City, {loader as cityLoader} from "./routes/city"
-import EditCity, {action as cityEditAction} from "./routes/edit";
-import {action as cityDeleteAction} from "./routes/delete"
+import City, { loader as cityLoader } from "./routes/city"
+import EditCity, { action as cityEditAction } from "./routes/edit";
+import { action as cityDeleteAction } from "./routes/delete"
 import Index from "./routes";
 
 const router = createBrowserRouter([
@@ -22,7 +19,7 @@ const router = createBrowserRouter([
         element: <Index />
       },
       {
-        path: "city/:cityId",        
+        path: "city/:cityId",
         element: <City />,
         loader: cityLoader,
         errorElement: <ErrorPage />,
@@ -44,8 +41,4 @@ const router = createBrowserRouter([
   }
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+export default router;
