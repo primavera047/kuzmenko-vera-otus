@@ -1,0 +1,43 @@
+<div style="padding: 20px">
+    <mat-card>
+        <mat-card-content>
+            <mat-progress-bar mode="determinate" [value]="this.progressBarStatus"></mat-progress-bar>
+            <div>
+                <p>{{this.currentWord}}/{{this.appConfig.countOfWords}}</p>
+                <p>Переведите слово: {{wordToTranslate}}</p>
+                <div *ngIf="!taskBoxHide" class="answer">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Перевод</mat-label>
+                        <input matInput #wordTranslation
+                            (keyup.enter)="onAnswer(wordTranslation.value); wordTranslation.value=''" />
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" type="submit"
+                        (click)="onAnswer(wordTranslation.value); wordTranslation.value=''">Ответ</button>
+
+                </div>
+            </div>
+            <div *ngIf="!okMessageHide">
+                <p>Правильный ответ!</p>
+            </div>
+            <div *ngIf="!wrongMessageHide">
+                <p>Неправильный ответ. Хотите узнать верный перевод?</p>
+                <button mat-flat-button color="primary" (click)="onWrongYes()">Да!</button>
+                <button mat-flat-button (click)="onWrongNo()">Нет</button>
+            </div>
+            <div *ngIf="!translatedWordHide">
+                <p>Перевод: {{translatedWord}}</p>
+                <button mat-flat-button color="primary" (click)="onWrongOk()">Ок</button>
+            </div>
+            <div *ngIf="!timeoutMessageHide">
+                <p>Время вышло!</p>
+                <button mat-flat-button color="primary" (click)="onTimeoutOk()">Ок</button>
+            </div>
+            <div *ngIf="!resultHide">
+                <p>Решено: {{this.currentWord}}/{{this.appConfig.countOfWords}}</p>
+                <p>Правильных ответов: {{this.solvedWords}}</p>
+                <button mat-flat-button color="primary" (click)="onResultAgain()">Начать сначала</button>
+                <button mat-flat-button (click)="onEnd()">Закончить</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

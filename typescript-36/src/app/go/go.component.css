@@ -1,0 +1,23 @@
+div .progress span {
+    padding-right: 10px;
+}
+
+button {
+    margin-right: 10px;
+}
+
+div .answer {
+    display: inline-flex;
+}
+
+div .answer mat-form-field {
+    width: 400px;
+}
+
+div .answer button {
+    margin-left: 20px;
+    height: 42pt;
+    width: 100pt;
+    font-size: 12pt;
+    font-weight: bold;
+}
