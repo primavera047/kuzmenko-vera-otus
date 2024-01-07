@@ -1,0 +1,45 @@
+<div style="padding: 20px;">
+
+    <mat-card>
+        <mat-card-content>
+            <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+                <div>
+                    <p>Настройки языка</p>
+                    <mat-form-field  appearance="outline">
+                        <mat-label>Основной язык</mat-label>
+                        <mat-select formControlName="mainLang" [(ngModel)]="appConfig!.sourceLang.label">
+                            <mat-option *ngFor="let lang of appConfig!.availableLangs"
+                                value="{{lang.label}}">{{lang.value}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field  appearance="outline">
+                        <mat-label>Язык перевода</mat-label>
+                        <mat-select formControlName="foreignLang" [(ngModel)]="appConfig!.foreignLang.label">
+                            <mat-option *ngFor="let lang of appConfig!.availableLangs"
+                                value="{{lang.label}}">{{lang.value}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+
+                    <p>Настройки упражнения</p>
+                    <mat-form-field  appearance="outline">
+                        <mat-label>Количество слов</mat-label>
+                        <input matInput formControlName="countOfWords" [(ngModel)]="appConfig!.countOfWords" />
+                    </mat-form-field>
+                    <mat-form-field  appearance="outline">
+                        <mat-label>Время упражнения</mat-label>
+                        <input matInput formControlName="timeForSolve" [(ngModel)]="appConfig!.timeForSolve" />
+                    </mat-form-field>
+                </div>
+                <div>
+                    <button mat-flat-button color="primary" type="submit" [disabled]="!settingsForm.valid">Сохранить</button>
+                    <button mat-flat-button type="button" (click)="onBack()">Назад</button>
+                    <p *ngIf="message">{{message}}</p>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

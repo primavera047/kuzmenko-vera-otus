@@ -1,0 +1,35 @@
+input {
+    border-radius: 10px;
+}
+
+.container {
+    display: flex;
+}
+
+.add {
+    display: inline-block;
+    width: 50%;
+    padding: 1%;
+    position: sticky;
+    top: 0;
+}
+
+.add mat-form-field {
+    display: inline-block;
+    width: 100%;
+}
+
+.recent {
+    display: inline-block;
+    width: 100%;
+    padding: 1%;
+}
+
+.spacer {
+    flex: 0.02 1 auto;
+}
+
+mat-card-actions {
+    padding: 15px;
+    padding-top: 0px;
+}

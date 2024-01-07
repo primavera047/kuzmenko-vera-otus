@@ -1,0 +1,56 @@
+<mat-card>
+  <mat-card-content>
+    <div class="container">
+      <div class="add">
+        <mat-card>
+          <mat-card-content>
+            <mat-form-field  appearance="outline">
+              <mat-label>Слово</mat-label>
+              <input matInput #newWord (keyup.enter)="addWord(newWord.value); newWord.value=''" />
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-flat-button color="primary" extended type="submit"
+              (click)="addWord(newWord.value); newWord.value=''">Добавить</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <span class="spacer"> </span>
+
+      <div class="add">
+        <mat-card>
+          <mat-card-content>
+            <mat-form-field  appearance="outline">
+              <mat-label>Текст</mat-label>
+              <textarea matInput #newText></textarea>
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-flat-button color="primary" extended type="submit"
+              (click)="addText(newText.value); newText.value=''">Добавить</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    <div class="container">
+      <div class="recent">
+        <mat-card>
+          <mat-card-content>
+            <p>Последние добавленные слова:</p>
+            <mat-list>
+              <div *ngFor="let word of recentlyAdded">
+                <mat-list-item>
+                  <span matListItemTitle>{{dictionary[word]}}</span>
+                  <span matListItemLine>{{word}}</span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+              </div>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+
+</mat-card>
