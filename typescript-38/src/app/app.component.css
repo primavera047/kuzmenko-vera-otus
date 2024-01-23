@@ -1,0 +1,25 @@
+.spacer {
+    flex: 0.05 1 auto;
+}
+
+mat-nav-list.list-horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+mat-nav-list.list-horizontal a {
+    border-radius: 10px;
+    margin: 5px;
+}
+
+mat-nav-list.list-horizontal .active {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+mat-nav-list a {
+    width: auto;
+}
+
+.active {
+    background-color: #3f51b5;
+}
