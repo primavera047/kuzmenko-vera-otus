@@ -2,7 +2,7 @@ import { AppConfig } from "./cutom-types"
 
 export const defaultConf: AppConfig = {
     timeForSolve: 60,
-    countOfWords: 10,
+    countOfWords: 9,
     sourceLang: {
         label: 'en',
         value: 'Английский'

@@ -14,8 +14,8 @@ export class TranslatorService {
     private addWord: AddWordsService
   ) {
     this.addWordSub$ = this.addWord.onAdd().subscribe(async (data: toTranslate) => {
-      console.log(`translator service: received message from addwordservice`)
-      console.log(data);
+      
+      
       if (data.word !== '') {
         await this.translate(data.word, data.sLang, data.fLang);
       }
@@ -32,37 +32,40 @@ export class TranslatorService {
     url.searchParams.set('q', word);
     url.searchParams.set('langpair', `${fromLang}|${toLang}`);    
 
+    let json = await this.doRequest(url);
+
+    if (json !== null && json['responseData'] !== undefined && json['responseData']['translatedText'] !== undefined) {
+      const translation: string = json['responseData']['translatedText'];
+
+      return translation;
+    }
+
+    return '';
+  }
+
+  async doRequest(url: URL): Promise<any> {
     AbortSignal.timeout ??= function timeout(ms) {
       const ctrl = new AbortController()
       setTimeout(() => ctrl.abort(), ms)
       return ctrl.signal
     }
 
-    let response = await fetch(url, { signal: AbortSignal.timeout(3000) });
+    const response = await fetch(url, { signal: AbortSignal.timeout(3000) });
 
     if (response.ok) {
-      let json: any = await response.json();
-
-      if (json['responseData'] !== undefined && json['responseData']['translatedText'] !== undefined) {
-        const translation: string = json['responseData']['translatedText'];
-
-        return translation;
-      }      
+      return response.json();
     }
     else {
-      alert("Ошибка HTTP: " + response.status);      
-    }
+      console.error("Ошибка HTTP: " + response.status);
 
-    return ''
+      return null;
+    }
   }
 
   async translate(word: string, fromLang: string, toLang: string): Promise<void> {
-    //const translation: string = `${toLang}_${word}`;
     const translation = await this.mymemory_translate(word, fromLang, toLang);
 
-    const dictName = `${fromLang}-${toLang}`;
-
-    console.log(`translator service: send translation of word: ${word} ${translation} ${dictName}`)
+    const dictName = `${fromLang}-${toLang}`;     
 
     this.subject$.next({
       word: word,

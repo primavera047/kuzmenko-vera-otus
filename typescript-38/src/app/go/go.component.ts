@@ -13,6 +13,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { Subscription } from 'rxjs';
+import { interval, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-go',
@@ -32,13 +34,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   styleUrl: './go.component.css'
 })
 export class GoComponent {
-  public appConfig!: AppConfig;
+  public appConfig?: AppConfig;
 
   public wordToTranslate: string = '';
-  public translatedWord: string = ''   
+  public translatedWord: string = ''
 
-  public timeLeft: number | undefined; 
-  public progressBarStatus: number = 0; 
+  public timeLeft: number | undefined;
+  public progressBarStatus: number = 0;
   public currentWord: number = 0;
   public solvedWords: number = 0;
 
@@ -48,60 +50,77 @@ export class GoComponent {
   public translatedWordHide: boolean = true;
   public timeoutMessageHide: boolean = true;
   public resultHide: boolean = true;
-  
-  private interval: any;
+
+  //private interval: any;
+  intervalSub$!: Subscription;
   private dictionary: Dictionary = {};
 
   constructor(
     private router: Router,
     private lstorage: LocalstorageService
-  ) {}
+  ) { }
 
-  async ngOnInit() {
-    console.log('init');
-    const loadedConfig = await this.lstorage.getConfig();
+  get currentWordValue(): number { return (this.currentWord) ? this.currentWord : 0 }
+  get countOfWords(): number { return (this.appConfig && this.appConfig.countOfWords) ? this.appConfig.countOfWords : 0 }
+  get solvedWordsValue(): number { return (this.solvedWords) ? this.solvedWords : 0 }
 
-    if (loadedConfig === null) {
-      console.log('null config')
-      this.appConfig = defaultConf;
-    }
-    else {
-      console.log(loadedConfig);
-      this.appConfig = loadedConfig;  
-    }
+  ngOnInit() {
+    this.getConfig().then((config) => {
+      const loadedConfig = config      
 
-    const dictName = `${this.appConfig.sourceLang.label}-${this.appConfig.foreignLang.label}`;
-    const loadedDictionary = await this.lstorage.getDict(dictName);
+      if (loadedConfig === null) {
+        this.appConfig = defaultConf;
+      }
+      else {
+        this.appConfig = loadedConfig;
+      }
 
-    if (loadedDictionary !== null) {
-      this.dictionary = loadedDictionary
-    }
+      const dictName = `${this.appConfig.sourceLang.label}-${this.appConfig.foreignLang.label}`;
 
-    this.timeLeft = this.appConfig.timeForSolve;
+      this.lstorage.getDict(dictName).then((lDict) => {
+        const loadedDictionary = lDict
 
-    await this.showNewWord();
+        if (loadedDictionary !== null) {
+          this.dictionary = loadedDictionary
+        }
+
+        this.timeLeft = this.appConfig!.timeForSolve;
+
+        this.showNewWord();
+      })
+    })
   }
 
-  private timer() {
+  async getConfig() {
+    return await this.lstorage.getConfig();
+  }
+
+  timer() {
     if (this.timeLeft && this.timeLeft > 0) {
       --this.timeLeft;
-      this.progressBarStatus = Math.floor((this.appConfig.timeForSolve - this.timeLeft) / this.appConfig.timeForSolve * 100);
+      this.progressBarStatus = Math.floor((this.appConfig!.timeForSolve - this.timeLeft) / this.appConfig!.timeForSolve * 100);
     }
     else {
       this.taskBoxHide = true;
       this.timeoutMessageHide = false;
+
+      if (this.intervalSub$ !== undefined) {
+        this.intervalSub$.unsubscribe();
+      }
     }
   }
 
-  private async showNewWord() {
-    if (this.currentWord < this.appConfig.countOfWords) {
+  async showNewWord() {
+    if (this.currentWord < this.appConfig!.countOfWords) {
       this.taskBoxHide = false;
 
-      const randomWord = await this.getRandomWord();          
-      this.wordToTranslate = this.dictionary[randomWord];     
+      const randomWord = await this.getRandomWord();
+      this.wordToTranslate = this.dictionary[randomWord];
       this.translatedWord = randomWord
 
-      this.interval = setInterval(() => this.timer(), 1000)
+      this.intervalSub$ = interval(1000).subscribe(() => {
+        this.timer();
+      });
     }
     else {
       this.taskBoxHide = true;
@@ -109,8 +128,10 @@ export class GoComponent {
     }
   }
 
-  onAnswer(translation: string) {
-    clearInterval(this.interval);
+  onAnswer(translation: string) {    
+    if (this.intervalSub$ !== undefined) {
+      this.intervalSub$.unsubscribe();
+    }
 
     ++this.currentWord;
 
@@ -118,7 +139,7 @@ export class GoComponent {
       ++this.solvedWords;
       this.okMessageHide = false;
 
-      setTimeout(() => { this.okMessageHide = true; }, 3000);
+      setTimeout(() => {this.okMessageHide = true}, 3000);      
 
       this.showNewWord();
     }
@@ -140,18 +161,19 @@ export class GoComponent {
   }
 
   onWrongOk() {
-    this.translatedWordHide = true;    
-        
+    this.translatedWordHide = true;
+
     this.showNewWord();
   }
 
-  onTimeoutOk() {    
+  onTimeoutOk() {
     this.timeoutMessageHide = true;
     this.taskBoxHide = true;
     this.resultHide = false;
 
-
-    clearInterval(this.interval);    
+    if (this.intervalSub$) {
+      this.intervalSub$.unsubscribe();
+    }
   }
 
   async onResultAgain() {
@@ -161,24 +183,20 @@ export class GoComponent {
     this.ngOnInit();
   }
 
-  onEnd() {    
+  onEnd() {
     this.router.navigate(['/recently-added'])
   }
 
-  ngOnDestroy() {    
-    clearInterval(this.interval);
+  ngOnDestroy() {
+    if (this.intervalSub$ !== undefined) {
+      this.intervalSub$.unsubscribe();
+    }
   }
 
-  private async getRandomWord(): Promise<string> {
-    
-    
-    if (this.dictionary !== null) {     
-      const arrayOfWords = Object.keys(this.dictionary);
-      const randomWord = arrayOfWords[Math.floor(Math.random() * arrayOfWords.length)];
+  async getRandomWord(): Promise<string> {
+    const arrayOfWords = Object.keys(this.dictionary);
+    const randomWord = arrayOfWords[Math.floor(Math.random() * arrayOfWords.length)];
 
-      return randomWord
-    }  
-
-    return '';
+    return randomWord;
   }
 }

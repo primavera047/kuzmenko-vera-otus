@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppConfig, Dictionary, DictMessage } from "../../ts/cutom-types";
 import { LocalstorageService } from '../services/localstorage.service';
-import { TranslatorService } from '../services/translator.service';
 import { AddWordsService } from '../services/add-words.service';
 import { Subscription } from 'rxjs';
 import { defaultConf } from '../../ts/default-app-conf';
@@ -30,7 +29,7 @@ import { MatDividerModule } from '@angular/material/divider';
   templateUrl: './recently-added.component.html',
   styleUrl: './recently-added.component.css'
 })
-export class RecentlyAddedComponent {
+export class RecentlyAddedComponent implements OnInit {
   appConfig!: AppConfig;
   dictionary!: Dictionary;
   public inputWord: string = '';
@@ -41,8 +40,10 @@ export class RecentlyAddedComponent {
   constructor(
     private lstorage: LocalstorageService,
     private adder: AddWordsService,
-  ) {
-    this.lstorage.getConfig()
+  ) {}
+
+  ngOnInit() {
+    this.getConfig()
       .then((res) => {
         if (res !== null) {
           this.appConfig = res;
@@ -52,22 +53,28 @@ export class RecentlyAddedComponent {
         }
 
         const dictName = `${this.appConfig.sourceLang.label}-${this.appConfig.foreignLang.label}`;
-        this.lstorage.getDict(dictName)
-          .then((res) => {
+        this.getDict(dictName)
+          .then((res):any => {
             if (res !== null) {
               this.dictionary = res
             }
             else {
               this.dictionary = {}
-            }
-
-            console.log(dictName);
+            }                        
 
             this.recentlyAdded = Object.keys(this.dictionary).reverse().slice(0, 10);
 
             this.lstorageSub$ = this.lstorage.onDictSave().subscribe((record: DictMessage) => this.onStorageUpdate(record))
-          });
-      });
+          });       
+      });  
+  }
+
+  getConfig() {
+    return this.lstorage.getConfig();
+  }
+
+  getDict(dictName: string) {
+    return this.lstorage.getDict(dictName)
   }
 
   onStorageUpdate(record: DictMessage) {
@@ -89,19 +96,19 @@ export class RecentlyAddedComponent {
   }
 
   ngOnDestroy() {
-    this.lstorageSub$.unsubscribe();
+    if (this.lstorageSub$) {
+      this.lstorageSub$.unsubscribe();
+    }    
   }
 
-  async addWord(word: string): Promise<void> {
-    console.log(`recently-added: add word ${word}`)
+  async addWord(word: string): Promise<void> {    
     if (word !== '') {
       this.adder.addWord(word, this.appConfig?.sourceLang.label!, this.appConfig?.foreignLang.label!);
     }
   }
 
   async addText(text: string): Promise<void> {
-    if (text !== "") {
-      console.log(text);
+    if (text !== "") {      
       this.adder.addText(text, this.appConfig?.sourceLang.label!, this.appConfig?.foreignLang.label!);
     }
   }

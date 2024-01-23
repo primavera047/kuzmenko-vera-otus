@@ -16,7 +16,7 @@ import {
   MatFormField,
   MatFormFieldControl,
   MatFormFieldModule
-} from "./chunk-6KRRO267.js";
+} from "./chunk-X2AJTPFP.js";
 import {
   A,
   ActiveDescendantKeyManager,
@@ -42,6 +42,8 @@ import {
   _getOptionScrollPosition,
   _isTestEnvironment,
   addAriaReferencedId,
+  animate,
+  animateChild,
   coerceArray,
   coerceBooleanProperty,
   coerceCssPixelValue,
@@ -53,18 +55,14 @@ import {
   mixinDisabled,
   mixinErrorState,
   mixinTabIndex,
-  removeAriaReferencedId,
-  supportsScrollBehavior
-} from "./chunk-I54HZTK2.js";
-import {
-  animate,
-  animateChild,
   query,
+  removeAriaReferencedId,
   state,
   style,
+  supportsScrollBehavior,
   transition,
   trigger
-} from "./chunk-DJ35NJUB.js";
+} from "./chunk-WTQBOUNI.js";
 import "./chunk-UWENEG5S.js";
 import {
   CommonModule,

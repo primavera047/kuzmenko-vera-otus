@@ -48,17 +48,25 @@ export class SettingsComponent {
     this.appConfig = defaultConf;
   }
 
-  async ngOnInit() {
-    console.log(this.appConfig);    
-    
-    const loadedAppConfig = await this.lstorage.getConfig();
-    
-    if (loadedAppConfig === null) {
-      this.lstorage.saveConfig(this.appConfig);
-    }
+  ngOnInit() {
+    this.getConfig().then((loadedAppConfig) => {
+      console.log(`loaded config: ${JSON.stringify(loadedAppConfig)}`)
+      if (loadedAppConfig === null) {
+        console.log('call saving');
+        this.saveConfig(this.appConfig).then(() => {});
+      }
+    })
   }
 
-  private getValueByLabel(langLabel: string): string | undefined {
+  getConfig(): Promise<AppConfig | null> {
+    return this.lstorage.getConfig();
+  }
+
+  saveConfig(appConfig: AppConfig): Promise<void> {
+    return this.lstorage.saveConfig(appConfig);
+  }
+
+  getValueByLabel(langLabel: string): string | undefined {
     for (let aLang of this.appConfig!.availableLangs) {
       if (aLang.label === langLabel) {
         return aLang.value;
@@ -68,7 +76,7 @@ export class SettingsComponent {
     return undefined;
   }
 
-  private getAvailableLang(langLabel: string): Lang | undefined {
+  getAvailableLang(langLabel: string): Lang | undefined {
     const langValue: string | undefined = this.getValueByLabel(langLabel);
 
     if (langValue !== undefined) {      
@@ -85,11 +93,9 @@ export class SettingsComponent {
 
     this.appConfig!.sourceLang = this.getAvailableLang(this.settingsForm.value.mainLang!)!
 
-    this.appConfig!.foreignLang = this.getAvailableLang(this.settingsForm.value.foreignLang!)!    
+    this.appConfig!.foreignLang = this.getAvailableLang(this.settingsForm.value.foreignLang!)!
 
-    //await this.lstorage.setToStorage<AppConfig>('config', this.appConfig)
-
-    await this.lstorage.saveConfig(this.appConfig!);
+    await this.saveConfig(this.appConfig!);
 
     this.message = "Настройки сохранены";
 

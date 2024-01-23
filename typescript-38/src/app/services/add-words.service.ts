@@ -13,7 +13,7 @@ export class AddWordsService {
   }
 
   addWord(word: string, sLang: string, fLang: string): void {
-    console.log(`add-word-service: add word ${word}, sLang: ${sLang}, fLang ${fLang}`)
+    
     word = word.toLowerCase();
 
     this.subject$.next({ word: word, sLang: sLang, fLang: fLang });

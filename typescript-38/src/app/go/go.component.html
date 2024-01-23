@@ -3,15 +3,15 @@
         <mat-card-content>
             <mat-progress-bar mode="determinate" [value]="this.progressBarStatus"></mat-progress-bar>
             <div>
-                <p>{{this.currentWord}}/{{this.appConfig.countOfWords}}</p>
+                <p>{{currentWordValue}}/{{countOfWords}}</p>
                 <p>Переведите слово: {{wordToTranslate}}</p>
                 <div *ngIf="!taskBoxHide" class="answer">
                     <mat-form-field appearance="outline">
                         <mat-label>Перевод</mat-label>
-                        <input matInput #wordTranslation
+                        <input id="answerValue" matInput #wordTranslation
                             (keyup.enter)="onAnswer(wordTranslation.value); wordTranslation.value=''" />
                     </mat-form-field>
-                    <button mat-flat-button color="primary" type="submit"
+                    <button id="answerButton" mat-flat-button color="primary" type="submit"
                         (click)="onAnswer(wordTranslation.value); wordTranslation.value=''">Ответ</button>
 
                 </div>
@@ -21,20 +21,20 @@
             </div>
             <div *ngIf="!wrongMessageHide">
                 <p>Неправильный ответ. Хотите узнать верный перевод?</p>
-                <button mat-flat-button color="primary" (click)="onWrongYes()">Да!</button>
-                <button mat-flat-button (click)="onWrongNo()">Нет</button>
+                <button id="wrongYes" mat-flat-button color="primary" (click)="onWrongYes()">Да!</button>
+                <button id="wrongNo" mat-flat-button (click)="onWrongNo()">Нет</button>
             </div>
             <div *ngIf="!translatedWordHide">
                 <p>Перевод: {{translatedWord}}</p>
-                <button mat-flat-button color="primary" (click)="onWrongOk()">Ок</button>
+                <button id="wrongOk" mat-flat-button color="primary" (click)="onWrongOk()">Ок</button>
             </div>
             <div *ngIf="!timeoutMessageHide">
                 <p>Время вышло!</p>
                 <button mat-flat-button color="primary" (click)="onTimeoutOk()">Ок</button>
             </div>
             <div *ngIf="!resultHide">
-                <p>Решено: {{this.currentWord}}/{{this.appConfig.countOfWords}}</p>
-                <p>Правильных ответов: {{this.solvedWords}}</p>
+                <p>Решено: {{currentWordValue}}/{{countOfWords}}</p>
+                <p>Правильных ответов: {{solvedWordsValue}}</p>
                 <button mat-flat-button color="primary" (click)="onResultAgain()">Начать сначала</button>
                 <button mat-flat-button (click)="onEnd()">Закончить</button>
             </div>

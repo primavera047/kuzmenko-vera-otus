@@ -8,21 +8,24 @@ import { TranslatorService } from './translator.service';
   providedIn: 'root'
 })
 export class LocalstorageService {
-  private dictSubject$ = new Subject<DictMessage>();
-  private configSubject$ = new Subject<any>();
+  dictSubject$ = new Subject<DictMessage>();
+  configSubject$ = new Subject<any>();
 
-  private translationSub$: Subscription;
+  translationSub$: Subscription;
 
-  private dictionaries: Record<string, LocalForage> = {};
-  private configStore: LocalForage = localforage.createInstance({ name: 'config' });
+  dictionaries: Record<string, LocalForage> = {};
+  configStore: LocalForage = localforage.createInstance({ name: 'config' });
 
   constructor(
     private translator: TranslatorService
   ) {
-    this.translationSub$ = this.translator.onTranslate().subscribe(async (translation: DictMessage) => {
-      console.log(`localsotrage service: received message from translator service`)
-      console.log(translation);
+    this.translationSub$ = this.subscribe();
+  }
+
+  subscribe() {
+    return this.translationSub$ = this.translator.onTranslate().subscribe(async (translation: DictMessage) => {            
       if (translation.word !== '' && translation.translation !== '') {
+        console.log(`test message: ${JSON.stringify(translation)}`)
         await this.saveToDict(translation.word, translation.translation, translation.dictName);
       }
     })
@@ -34,8 +37,7 @@ export class LocalstorageService {
 
   async saveToDict(word: string, translation: string, dictName: string): Promise<void> {
     if (this.dictionaries[dictName] === undefined) {
-      this.dictionaries[dictName] = localforage.createInstance({ name: dictName });
-      console.log(this.dictionaries);
+      this.dictionaries[dictName] = localforage.createInstance({ name: dictName });      
     }
 
     this.dictionaries[dictName].setItem(word, translation);
@@ -58,9 +60,7 @@ export class LocalstorageService {
       if (translation !== null) {
         dict[word] = translation;
       }
-    }
-
-    console.log(dict);
+    }    
 
     return dict;
   }
