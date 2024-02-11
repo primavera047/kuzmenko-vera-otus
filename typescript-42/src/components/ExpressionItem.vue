@@ -1,11 +1,31 @@
 <script setup lang="ts">
 import { useExpressionStore } from '@/stores/expression'
 
-const expressionStore = useExpressionStore()
+const expressionStore = useExpressionStore();
 
 function isBlank(element: string): boolean {
-  return element === 'x'
+  return element === 'x';
 }
+</script>
+
+<script lang="ts">
+import { useSettingsStore } from '@/stores/settings';
+
+const settingsStore = useSettingsStore();
+  export default {
+    data () {
+      return {        
+        rules: {
+          required: (value: string) => !!value || 'обязательное',          
+          neededType: (value: string) => {
+            const pattern = /^[0-9]+$/;
+            const result: boolean = settingsStore.allowedOps.includes(value) || pattern.test(value)
+            return result || 'число или знак';
+          },
+        },
+      }
+    },
+  }
 </script>
 
 <template>
@@ -19,6 +39,7 @@ function isBlank(element: string): boolean {
               style="display: inline-block; width: 70px"
               v-model="expressionStore.answers[index]"
               v-if="isBlank(part)"
+              :rules="[rules.required, rules.neededType]"
             ></v-text-field>
             <span style="display: inline-block; font-size: 30px; " v-else> {{ part }} </span>
           </v-col>

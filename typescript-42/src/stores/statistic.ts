@@ -6,7 +6,7 @@ export const useStatisticStore = defineStore('statistic', () => {
   const allSolvedCount = ref(0);
   const allPassedCount = ref(0);
 
-  const successPercents = computed(() => (allPassedCount.value !== 0) ? allSolvedCount.value * 100 / allPassedCount.value : 0);
+  const successPercents = computed(() => (allPassedCount.value !== 0) ? (allSolvedCount.value * 100 / allPassedCount.value).toFixed(2) : 0);
 
   function addGame(): void {
     allGamesCount.value++;

@@ -21,15 +21,15 @@ const statisticStore = useStatisticStore()
             </td>
           </tr>
           <tr>
-            <td>Количество решенных примеров:</td>
+            <td>Количество правильно решенных примеров:</td>
             <td>
-              {{ statisticStore.allSolvedCount }}
+              {{ statisticStore.allSolvedCount }} / {{ statisticStore.allPassedCount }}
             </td>
           </tr>
           <tr>
             <td>Процент правильных ответов:</td>
             <td>
-              {{ statisticStore.successPercents }}
+              {{ statisticStore.successPercents }} %
             </td>
           </tr>
         </tbody>

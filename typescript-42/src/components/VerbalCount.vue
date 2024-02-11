@@ -23,6 +23,7 @@ const statisticStore = useStatisticStore()
 const showGame = ref(true)
 const isTimeout = ref(false)
 const showDialog = ref(false)
+const showAnswerResult = ref(0);
 
 const currentEx = ref(1)
 
@@ -43,6 +44,17 @@ function onTimeLeft() {
   isTimeout.value = true
 
   onGameEnd()
+}
+
+function onAnswerResult(result: boolean): void {
+  if (result) {
+    showAnswerResult.value = 1;
+  }
+  else {
+    showAnswerResult.value = 2;
+  }
+
+  setTimeout(() => { showAnswerResult.value = 0; }, 2000);
 }
 
 function randomInt(min: number, max: number): number {
@@ -156,9 +168,11 @@ function onAnswer() {
   const gotAnswer = solveStringExpression(newExpression)
 
   if (gotAnswer === expectedAnswer) {
-    statisticStore.addAnswer(true)
+    statisticStore.addAnswer(true);
+    onAnswerResult(true);
   } else {
-    statisticStore.addAnswer(false)
+    statisticStore.addAnswer(false);
+    onAnswerResult(false);
   }
 
   if (currentEx.value === settingsStore.expCount) {
@@ -232,9 +246,13 @@ function onNewGame() {
         <v-btn type="button" @click="onPass">Пропустить</v-btn>
       </v-card-actions>
 
+      <v-card-text v-if="showAnswerResult === 1"> Правильный ответ! </v-card-text>
+
+      <v-card-text v-if="showAnswerResult === 2"> Ответ не правильный </v-card-text>
+
       <v-card-text v-if="!showGame && isTimeout"> Время вышло </v-card-text>
 
-      <v-card-text v-if="!showGame && !isTimeout"> Конец раунда </v-card-text>
+      <v-card-text v-if="!showGame && !isTimeout"> Конец раунда </v-card-text>         
 
       <v-card-actions v-if="!showGame">
         <v-btn type="button" @click="onNewGame">Начать сначала</v-btn>
